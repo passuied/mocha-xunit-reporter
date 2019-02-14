@@ -332,6 +332,17 @@ describe('mocha-xunit-reporter', () => {
       reporter = createReporter({ mochaFile: 'test/mocha.xml', addTags: true });
       var testCase = reporter.getTestData(modTestCase);
       expect(testCase.test[1].traits[0].trait._attr['name']).to.equal('aid');
+      expect(testCase.test[1].traits[0].trait._attr['value']).to.equal(
+        'EPM-DP-C1234'
+      );
+      expect(testCase.test[1].traits[1].trait._attr['name']).to.equal('sid');
+      expect(testCase.test[1].traits[1].trait._attr['value']).to.equal(
+        'EPM-1234'
+      );
+      expect(testCase.test[1].traits[2].trait._attr['name']).to.equal('type');
+      expect(testCase.test[1].traits[2].trait._attr['value']).to.equal(
+        'Integration'
+      );
     });
   });
 });
