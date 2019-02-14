@@ -90,7 +90,7 @@ describe('mocha-xunit-reporter', () => {
     var testPath = '/subdir/foo/mocha.xml';
     var parts = testPath.slice(1).split('/');
 
-    parts.reduce(function (testPath) {
+    parts.reduce(function(testPath) {
       if (fs.existsSync(__dirname + testPath)) {
         var removeFile =
           testPath.indexOf('.') === -1 ? 'rmdirSync' : 'unlinkSync';
@@ -119,35 +119,35 @@ describe('mocha-xunit-reporter', () => {
     }
   }
 
-  before(function () {
+  before(function() {
     // cache this
     MOCHA_FILE = process.env.MOCHA_FILE;
   });
 
-  after(function () {
+  after(function() {
     // reset this
     process.env.MOCHA_FILE = MOCHA_FILE;
   });
 
-  beforeEach(function () {
+  beforeEach(function() {
     runner = new Runner();
     filePath = undefined;
     delete process.env.MOCHA_FILE;
     delete process.env.PROPERTIES;
   });
 
-  afterEach(function () {
+  afterEach(function() {
     debug('after');
   });
 
-  it('can produce a XUnit XML report', function () {
+  it('can produce a XUnit XML report', function() {
     createReporter({ mochaFile: 'test/mocha.xml' });
     executeTestRunner();
 
     verifyMochaFile(filePath);
   });
 
-  it('respects `process.env.MOCHA_FILE`', function () {
+  it('respects `process.env.MOCHA_FILE`', function() {
     process.env.MOCHA_FILE = 'test/results.xml';
     createReporter();
     executeTestRunner();
@@ -155,14 +155,14 @@ describe('mocha-xunit-reporter', () => {
     verifyMochaFile(process.env.MOCHA_FILE);
   });
 
-  it('respects `--reporter-options mochaFile=`', function () {
+  it('respects `--reporter-options mochaFile=`', function() {
     createReporter({ mochaFile: 'test/results.xml' });
     executeTestRunner();
 
     verifyMochaFile(filePath);
   });
 
-  it('respects `[hash]` pattern in test results report filename', function () {
+  it('respects `[hash]` pattern in test results report filename', function() {
     var dir = 'test/';
     var path = dir + 'results.[hash].xml';
     createReporter({ mochaFile: path });
@@ -170,7 +170,7 @@ describe('mocha-xunit-reporter', () => {
     verifyMochaFile(dir + getFileNameWithHash(dir));
   });
 
-  it('will create intermediate directories', function () {
+  it('will create intermediate directories', function() {
     createReporter({ mochaFile: 'test/subdir/foo/mocha.xml' });
     removeTestPath();
     executeTestRunner();
@@ -179,21 +179,21 @@ describe('mocha-xunit-reporter', () => {
     removeTestPath();
   });
 
-  it('creates valid XML report for invalid message', function () {
+  it('creates valid XML report for invalid message', function() {
     createReporter({ mochaFile: 'test/mocha.xml' });
     executeTestRunner({ invalidChar: '\u001b' });
 
     verifyMochaFile(filePath);
   });
 
-  it('outputs skipped tests if "includePending" is specified', function () {
+  it('outputs skipped tests if "includePending" is specified', function() {
     createReporter({ mochaFile: 'test/mocha.xml', includePending: true });
     executeTestRunner({ includePending: true });
 
     verifyMochaFile(filePath);
   });
 
-  it('can output to the console', function () {
+  it('can output to the console', function() {
     createReporter({ mochaFile: 'test/console.xml', toConsole: true });
 
     var stdout = testConsole.stdout.inspect();
@@ -215,11 +215,11 @@ describe('mocha-xunit-reporter', () => {
   function configureReporter(options) {
     var reporter = createReporter(options);
 
-    reporter.flush = function (suites) {
+    reporter.flush = function(suites) {
       reporter.suites = suites;
     };
 
-    suiteTitles.forEach(function (title) {
+    suiteTitles.forEach(function(title) {
       runner.startSuite({ title: title, suites: [1], tests: [1] });
     });
     runner.end();
@@ -227,49 +227,49 @@ describe('mocha-xunit-reporter', () => {
     return reporter;
   }
 
-  describe('Output', function () {
+  describe('Output', function() {
     var reporter, assembly;
 
-    beforeEach(function () {
+    beforeEach(function() {
       reporter = spyingReporter();
     });
 
-    it('skips suites with empty title', function () {
+    it('skips suites with empty title', function() {
       runner.startSuite({ title: '', tests: [1] });
       runner.end();
 
       expect(assembly).to.be.empty;
     });
 
-    it('skips suites without testcases and suites', function () {
+    it('skips suites without testcases and suites', function() {
       runner.startSuite({ title: 'test me' });
       runner.end();
 
       expect(assembly).to.be.empty;
     });
 
-    it('does not skip suites with nested suites', function () {
+    it('does not skip suites with nested suites', function() {
       runner.startSuite({ title: 'test me', suites: [1] });
       runner.end();
 
       expect(assembly).to.have.length(1);
     });
 
-    it('does not skip suites with nested tests', function () {
+    it('does not skip suites with nested tests', function() {
       runner.startSuite({ title: 'test me', tests: [1] });
       runner.end();
 
       expect(assembly).to.have.length(1);
     });
 
-    it('does not skip root suite', function () {
+    it('does not skip root suite', function() {
       runner.startSuite({ title: '', root: true, suites: [1] });
       runner.end();
 
       expect(assembly).to.have.length(1);
     });
 
-    it('uses "Root Suite" by default', function () {
+    it('uses "Root Suite" by default', function() {
       runner.startSuite({ title: '', root: true, suites: [1] });
       runner.end();
       expect(assembly[0].collection[0]._attr).to.have.property(
@@ -284,7 +284,7 @@ describe('mocha-xunit-reporter', () => {
 
       reporter = createReporter(options);
 
-      reporter.flush = function (suites) {
+      reporter.flush = function(suites) {
         assembly = suites;
       };
 
@@ -292,7 +292,7 @@ describe('mocha-xunit-reporter', () => {
     }
   });
 
-  describe('Feature "Configurable addTags"', function () {
+  describe('Feature "Configurable addTags"', function() {
     var reporter,
       testsuites,
       mockedTestCase = {
@@ -301,7 +301,7 @@ describe('mocha-xunit-reporter', () => {
         tests: '1',
         failures: '0',
         time: '0.004',
-        fullTitle: function () {
+        fullTitle: function() {
           return 'Super Suite ' + this.title;
         }
       };
@@ -331,12 +331,7 @@ describe('mocha-xunit-reporter', () => {
         'should behave like so @aid=EPM-DP-C1234 @sid=EPM-1234 @type=Integration';
       reporter = createReporter({ mochaFile: 'test/mocha.xml', addTags: true });
       var testCase = reporter.getTestData(modTestCase);
-      //expect(testCase.test[1]).to.equal('aid');
-
       expect(testCase.test[1].traits[0].trait._attr['name']).to.equal('aid');
-      //expect(testCase.test[1].traits[0].trait._attr.value).to.equal(
-      //'EPM-AA-C1234'
-      //);
     });
   });
 });

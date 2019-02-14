@@ -183,14 +183,15 @@ MochaXUnitReporter.prototype.getTestData = function(test, status) {
           time: typeof test.duration === 'undefined' ? 0 : test.duration / 1000,
           result: status
         }
-      },
-      {
-        traits: []
       }
     ]
   };
 
   if (tagResult && tagResult.tags) {
+    var trait = {
+      traits: []
+    };
+    testCase.test[1] = trait;
     Object.keys(tagResult.tags).forEach(tagName => {
       var tagValue = '';
       if (tagResult.tags[tagName]) {
@@ -305,7 +306,7 @@ MochaXUnitReporter.prototype.getXml = function(collections) {
     {
       assemblies: [assembly]
     },
-    {declaration: true, indent: '  '}
+    { declaration: true, indent: '  ' }
   );
 };
 

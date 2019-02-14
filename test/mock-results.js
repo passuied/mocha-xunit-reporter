@@ -40,9 +40,6 @@ module.exports = function(stats, options) {
                       time: '0.001',
                       result: 'passed'
                     }
-                  },
-                  {
-                    traits: []
                   }
                 ]
               },
@@ -54,9 +51,6 @@ module.exports = function(stats, options) {
                       time: '0.001',
                       result: 'failed'
                     }
-                  },
-                  {
-                    traits: []
                   }
                 ]
               },
@@ -68,9 +62,6 @@ module.exports = function(stats, options) {
                       time: '0.001',
                       result: 'failed'
                     }
-                  },
-                  {
-                    traits: []
                   }
                 ]
               }
@@ -96,9 +87,6 @@ module.exports = function(stats, options) {
                       time: '0.004',
                       result: 'passed'
                     }
-                  },
-                  {
-                    traits: []
                   }
                 ]
               }
@@ -130,9 +118,6 @@ module.exports = function(stats, options) {
                 time: '0',
                 result: 'skipped'
               }
-            },
-            {
-              traits: []
             }
           ]
         }
@@ -143,5 +128,5 @@ module.exports = function(stats, options) {
     data.assemblies[0].assembly[0]._attr.total = 5;
   }
 
-  return xml(data, {declaration: true});
+  return xml(data, { declaration: true });
 };
