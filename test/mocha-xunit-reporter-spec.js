@@ -27,7 +27,7 @@ describe('mocha-xunit-reporter', () => {
     options = options || {};
     options.invalidChar = options.invalidChar || '';
     options.title = options.title || 'Foo Bar module';
-    options.root = (typeof options.root !== 'undefined') ? options.root : false;
+    options.root = typeof options.root !== 'undefined' ? options.root : false;
     runner.start();
 
     runner.startSuite({
@@ -40,14 +40,24 @@ describe('mocha-xunit-reporter', () => {
       runner.pass(new Test('Foo can weez the juice', 'can weez the juice', 1));
     }
 
-    runner.fail(new Test('Bar can narfle the garthog', 'can narfle the garthog', 1), {
-      stack: options.invalidChar + 'expected garthog to be dead' + options.invalidChar
-    });
+    runner.fail(
+      new Test('Bar can narfle the garthog', 'can narfle the garthog', 1),
+      {
+        stack:
+          options.invalidChar +
+          'expected garthog to be dead' +
+          options.invalidChar
+      }
+    );
 
-    runner.fail(new Test('Baz can behave like a flandip', 'can behave like a flandip', 1), {
-      name: 'BazError',
-      message: 'expected baz to be masher, a hustler, an uninvited grasper of cone'
-    });
+    runner.fail(
+      new Test('Baz can behave like a flandip', 'can behave like a flandip', 1),
+      {
+        name: 'BazError',
+        message:
+          'expected baz to be masher, a hustler, an uninvited grasper of cone'
+      }
+    );
 
     runner.startSuite({
       title: 'Another suite!',
@@ -67,7 +77,7 @@ describe('mocha-xunit-reporter', () => {
   }
 
   function verifyMochaFile(path, options) {
-    var now = (new Date()).toISOString();
+    var now = new Date().toISOString();
     debug('verify', now);
     var output = fs.readFileSync(path, 'utf-8');
     expect(output).xml.to.be.valid();
@@ -82,7 +92,8 @@ describe('mocha-xunit-reporter', () => {
 
     parts.reduce(function (testPath) {
       if (fs.existsSync(__dirname + testPath)) {
-        var removeFile = testPath.indexOf('.') === -1 ? 'rmdirSync' : 'unlinkSync';
+        var removeFile =
+          testPath.indexOf('.') === -1 ? 'rmdirSync' : 'unlinkSync';
         fs[removeFile](__dirname + testPath);
       }
 
@@ -144,7 +155,6 @@ describe('mocha-xunit-reporter', () => {
     verifyMochaFile(process.env.MOCHA_FILE);
   });
 
-
   it('respects `--reporter-options mochaFile=`', function () {
     createReporter({ mochaFile: 'test/results.xml' });
     executeTestRunner();
@@ -175,7 +185,6 @@ describe('mocha-xunit-reporter', () => {
 
     verifyMochaFile(filePath);
   });
-
 
   it('outputs skipped tests if "includePending" is specified', function () {
     createReporter({ mochaFile: 'test/mocha.xml', includePending: true });
@@ -218,98 +227,116 @@ describe('mocha-xunit-reporter', () => {
     return reporter;
   }
 
+  describe('Output', function () {
+    var reporter, assembly;
 
+    beforeEach(function () {
+      reporter = spyingReporter();
+    });
 
-describe('Output', function () {
-  var reporter, assembly;
+    it('skips suites with empty title', function () {
+      runner.startSuite({ title: '', tests: [1] });
+      runner.end();
 
-  beforeEach(function () {
-    reporter = spyingReporter();
-  });
+      expect(assembly).to.be.empty;
+    });
 
-  it('skips suites with empty title', function () {
-    runner.startSuite({ title: '', tests: [1] });
-    runner.end();
+    it('skips suites without testcases and suites', function () {
+      runner.startSuite({ title: 'test me' });
+      runner.end();
 
-    expect(assembly).to.be.empty;
-  });
+      expect(assembly).to.be.empty;
+    });
 
-  it('skips suites without testcases and suites', function () {
-    runner.startSuite({ title: 'test me' });
-    runner.end();
+    it('does not skip suites with nested suites', function () {
+      runner.startSuite({ title: 'test me', suites: [1] });
+      runner.end();
 
-    expect(assembly).to.be.empty;
-  });
+      expect(assembly).to.have.length(1);
+    });
 
-  it('does not skip suites with nested suites', function () {
-    runner.startSuite({ title: 'test me', suites: [1] });
-    runner.end();
+    it('does not skip suites with nested tests', function () {
+      runner.startSuite({ title: 'test me', tests: [1] });
+      runner.end();
 
-    expect(assembly).to.have.length(1);
-  });
+      expect(assembly).to.have.length(1);
+    });
 
-  it('does not skip suites with nested tests', function () {
-    runner.startSuite({ title: 'test me', tests: [1] });
-    runner.end();
+    it('does not skip root suite', function () {
+      runner.startSuite({ title: '', root: true, suites: [1] });
+      runner.end();
 
-    expect(assembly).to.have.length(1);
-  });
+      expect(assembly).to.have.length(1);
+    });
 
-  it('does not skip root suite', function () {
-    runner.startSuite({ title: '', root: true, suites: [1] });
-    runner.end();
+    it('uses "Root Suite" by default', function () {
+      runner.startSuite({ title: '', root: true, suites: [1] });
+      runner.end();
+      expect(assembly[0].collection[0]._attr).to.have.property(
+        'name',
+        'Root Suite'
+      );
+    });
 
-    expect(assembly).to.have.length(1);
-  });
+    function spyingReporter(options) {
+      options = options || {};
+      options.mochaFile = options.mochaFile || 'test/mocha.xml';
 
-  it('uses "Root Suite" by default', function () {
-    runner.startSuite({ title: '', root: true, suites: [1] });
-    runner.end();
-    expect(assembly[0].collection[0]._attr).to.have.property('name', 'Root Suite');
-  });
+      reporter = createReporter(options);
 
-  function spyingReporter(options) {
-    options = options || {};
-    options.mochaFile = options.mochaFile || 'test/mocha.xml';
+      reporter.flush = function (suites) {
+        assembly = suites;
+      };
 
-    reporter = createReporter(options);
-
-    reporter.flush = function (suites) {
-      assembly = suites;
-    };
-
-    return reporter;
-  }
-});
-
-describe('Feature "Configurable addTags"', function () {
-  var reporter, testsuites, mockedTestCase = {
-    title: "should behave like so",
-    timestamp: 123,
-    tests: "1",
-    failures: "0",
-    time: "0.004",
-    fullTitle: function () {
-      return 'Super Suite ' + this.title
+      return reporter;
     }
-  };
-
-  it('should generate attributes for addTags=true and tags in test title', () => {
-    var modTestCase = { ...mockedTestCase };
-    modTestCase.title = "should behave like so @aid=EPM-DP-C1234 @sid=EPM-1234 @type=Integration"
-    reporter = createReporter({ mochaFile: 'test/mocha.xml', addTags: true });
-    var testCase = reporter.getTestData(modTestCase);
-    expect(testCase.test[0]._attr.name).to.equal('Super Suite should behave like so');
-    expect(testCase.test[0]._attr.aid).to.equal('EPM-DP-C1234');
-    expect(testCase.test[0]._attr.sid).to.equal('EPM-1234');
-
   });
 
-  it('should still work for addTags=true and tags NOT in test title', () => {
-    reporter = createReporter({ mochaFile: 'test/mocha.xml', addTags: true });
-    var testCase = reporter.getTestData(mockedTestCase);
-    expect(testCase.test[0]._attr.name).to.equal(mockedTestCase.fullTitle());
-  });
-});
+  describe('Feature "Configurable addTags"', function () {
+    var reporter,
+      testsuites,
+      mockedTestCase = {
+        title: 'should behave like so',
+        timestamp: 123,
+        tests: '1',
+        failures: '0',
+        time: '0.004',
+        fullTitle: function () {
+          return 'Super Suite ' + this.title;
+        }
+      };
 
+    it('should generate attributes for addTags=true and tags in test title', () => {
+      var modTestCase = { ...mockedTestCase };
+      modTestCase.title =
+        'should behave like so @aid=EPM-DP-C1234 @sid=EPM-1234 @type=Integration';
+      reporter = createReporter({ mochaFile: 'test/mocha.xml', addTags: true });
+      var testCase = reporter.getTestData(modTestCase);
+      expect(testCase.test[0]._attr.name).to.equal(
+        'Super Suite should behave like so'
+      );
+      expect(testCase.test[0]._attr.aid).to.equal('EPM-DP-C1234');
+      expect(testCase.test[0]._attr.sid).to.equal('EPM-1234');
+    });
+
+    it('should still work for addTags=true and tags NOT in test title', () => {
+      reporter = createReporter({ mochaFile: 'test/mocha.xml', addTags: true });
+      var testCase = reporter.getTestData(mockedTestCase);
+      expect(testCase.test[0]._attr.name).to.equal(mockedTestCase.fullTitle());
+    });
+
+    it('should generate traits for addTags=true and tags in test title', () => {
+      var modTestCase = { ...mockedTestCase };
+      modTestCase.title =
+        'should behave like so @aid=EPM-DP-C1234 @sid=EPM-1234 @type=Integration';
+      reporter = createReporter({ mochaFile: 'test/mocha.xml', addTags: true });
+      var testCase = reporter.getTestData(modTestCase);
+      //expect(testCase.test[1]).to.equal('aid');
+
+      expect(testCase.test[1].traits[0].trait._attr['name']).to.equal('aid');
+      //expect(testCase.test[1].traits[0].trait._attr.value).to.equal(
+      //'EPM-AA-C1234'
+      //);
+    });
+  });
 });
