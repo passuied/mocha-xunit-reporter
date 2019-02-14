@@ -1,41 +1,44 @@
 var xml = require('xml');
 
-module.exports = function (stats, options) {
+module.exports = function(stats, options) {
   var data = {
     assemblies: [
       {
         assembly: [
           {
             _attr: {
-              name: "Mocha Tests",
-              total: "4",
-              passed: "2",
-              failed: "2",
-              skipped: "0",
-              time: "0.007",
-              "run-date": stats.start.toISOString().split('T')[0],
-              "run-time": stats.start.toISOString().split('T')[1].split('.')[0]
+              name: 'Mocha Tests',
+              total: '4',
+              passed: '2',
+              failed: '2',
+              skipped: '0',
+              time: '0.007',
+              'run-date': stats.start.toISOString().split('T')[0],
+              'run-time': stats.start
+                .toISOString()
+                .split('T')[1]
+                .split('.')[0]
             }
           },
           {
             collection: [
               {
                 _attr: {
-                  name: "Foo Bar module",
-                  total: "3",
-                  passed: "1",
-                  failed: "2",
-                  skipped: "0",
-                  time: "0.003"
+                  name: 'Foo Bar module',
+                  total: '3',
+                  passed: '1',
+                  failed: '2',
+                  skipped: '0',
+                  time: '0.003'
                 }
               },
               {
                 test: [
                   {
                     _attr: {
-                      name: "Foo can weez the juice",
-                      time: "0.001",
-                      result: "passed"
+                      name: 'Foo can weez the juice',
+                      time: '0.001',
+                      result: 'passed'
                     }
                   }
                 ]
@@ -44,9 +47,9 @@ module.exports = function (stats, options) {
                 test: [
                   {
                     _attr: {
-                      name: "Bar can narfle the garthog",
-                      time: "0.001",
-                      result: "failed",
+                      name: 'Bar can narfle the garthog',
+                      time: '0.001',
+                      result: 'failed'
                     }
                   }
                 ]
@@ -55,10 +58,9 @@ module.exports = function (stats, options) {
                 test: [
                   {
                     _attr: {
-                      name: "Baz can behave like a flandip",
-                      time: "0.001",
-                      result: "failed",
-
+                      name: 'Baz can behave like a flandip',
+                      time: '0.001',
+                      result: 'failed'
                     }
                   }
                 ]
@@ -69,22 +71,21 @@ module.exports = function (stats, options) {
             collection: [
               {
                 _attr: {
-                  name: "Another suite!",
-                  total: "1",
-                  passed: "1",
-                  failed: "0",
-                  skipped: "0",
-                  time: "0.004"
+                  name: 'Another suite!',
+                  total: '1',
+                  passed: '1',
+                  failed: '0',
+                  skipped: '0',
+                  time: '0.004'
                 }
               },
               {
                 test: [
                   {
                     _attr: {
-                      name: "Another suite",
-                      time: "0.004",
-                      result: "passed",
-
+                      name: 'Another suite',
+                      time: '0.004',
+                      result: 'passed'
                     }
                   }
                 ]
@@ -101,22 +102,21 @@ module.exports = function (stats, options) {
       collection: [
         {
           _attr: {
-            name: "Pending suite!",
-            total: "1",
-            passed: "0",
-            failed: "0",
-            skipped: "1",
-            time: "0"
+            name: 'Pending suite!',
+            total: '1',
+            passed: '0',
+            failed: '0',
+            skipped: '1',
+            time: '0'
           }
         },
         {
           test: [
             {
               _attr: {
-                name: "Pending suite",
-                time: "0",
-                result: "skipped",
-
+                name: 'Pending suite',
+                time: '0',
+                result: 'skipped'
               }
             }
           ]
@@ -126,7 +126,6 @@ module.exports = function (stats, options) {
 
     data.assemblies[0].assembly[0]._attr.skipped = 1;
     data.assemblies[0].assembly[0]._attr.total = 5;
-
   }
 
   return xml(data, { declaration: true });
