@@ -80,7 +80,6 @@ function MochaXUnitReporter(runner, options) {
   this._runner = runner;
   // get functionality from the Base reporter
   Base.call(this, runner);
-  var stats = this.stats;
 
   var collections = [];
 
