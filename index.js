@@ -8,6 +8,7 @@ var debug = require('debug')('mocha-xunit-reporter');
 var mkdirp = require('mkdirp');
 var md5 = require('md5');
 var stripAnsi = require('strip-ansi');
+var createStatsCollector = require("mocha/lib/stats-collector");
 
 module.exports = MochaXUnitReporter;
 
@@ -74,8 +75,11 @@ function getTags(testTitle) {
  * @param {Object} options - mocha options
  */
 function MochaXUnitReporter(runner, options) {
+  createStatsCollector(runner);
   this._options = configureDefaults(options);
   this._runner = runner;
+  // get functionality from the Base reporter
+  Base.call(this, runner);
 
   var collections = [];
 
@@ -83,8 +87,7 @@ function MochaXUnitReporter(runner, options) {
     return collections[collections.length - 1].collection;
   }
 
-  // get functionality from the Base reporter
-  Base.call(this, runner);
+
 
   // remove old results
   this._runner.on(
