@@ -76,6 +76,9 @@ function getTags(testTitle) {
 function MochaXUnitReporter(runner, options) {
   this._options = configureDefaults(options);
   this._runner = runner;
+  // get functionality from the Base reporter
+  Base.call(this, runner);
+  var stats = this.stats;
 
   var collections = [];
 
@@ -83,8 +86,7 @@ function MochaXUnitReporter(runner, options) {
     return collections[collections.length - 1].collection;
   }
 
-  // get functionality from the Base reporter
-  Base.call(this, runner);
+
 
   // remove old results
   this._runner.on(

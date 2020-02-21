@@ -2,10 +2,12 @@
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+var createStatsCollector = require('mocha/lib/stats-collector');
 
 // mock test runner
 function Runner() {
   Runner.super_.call(this);
+  createStatsCollector(this);
 }
 
 util.inherits(Runner, EventEmitter);
