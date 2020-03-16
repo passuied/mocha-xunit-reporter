@@ -28,13 +28,6 @@ function configureDefaults(options) {
   return options;
 }
 
-function isInvalidSuite(suite) {
-  return (
-    (!suite.root && suite.title === '') ||
-    (suite.tests.length === 0 && suite.suites.length === 0)
-  );
-}
-
 /**
  * Parses title for tags in format @tagName=value
  * @param {} testTitle
@@ -103,7 +96,7 @@ function MochaXUnitReporter(runner, options) {
   this._runner.on(
     'suite',
     function(suite) {
-      if (!isInvalidSuite(suite)) {
+      if (suite.tests.length) {
         collections.push(this.getCollectionData(suite));
       }
     }.bind(this)
@@ -151,7 +144,7 @@ MochaXUnitReporter.prototype.getCollectionData = function(suite) {
     collection: [
       {
         _attr: {
-          name: suite.title || 'Root Suite',
+          name: suite.title || 'Untitled Collection',
           total: suite.tests.length
         }
       }
@@ -209,6 +202,28 @@ MochaXUnitReporter.prototype.getTestData = function(test, status) {
           }
         }
       });
+    });
+  }
+
+  if (status === 'failed') {
+    testCase.test.push({
+      failure: [
+        {
+          _attr: {
+            'exception-type': test.err.name
+          }
+        },
+        {
+          message: {
+            _cdata: test.err.message
+          }
+        },
+        {
+          'stack-trace': {
+            _cdata: test.err.stack
+          }
+        }
+      ]
     });
   }
 

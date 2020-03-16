@@ -41,21 +41,30 @@ describe('mocha-xunit-reporter', () => {
     }
 
     runner.fail(
-      new Test('Bar can narfle the garthog', 'can narfle the garthog', 1),
+      new Test('Bar can narfle the garthog', 'can narfle the garthog', 1, {
+        name: 'BarError',
+        message: 'expected garthog to be dead',
+        stack: 'expected garthog to be dead'
+      }),
       {
-        stack:
-          options.invalidChar +
-          'expected garthog to be dead' +
-          options.invalidChar
+        name: 'BarError',
+        message: 'expected garthog to be dead',
+        stack: 'expected garthog to be dead'
       }
     );
 
     runner.fail(
-      new Test('Baz can behave like a flandip', 'can behave like a flandip', 1),
+      new Test('Baz can behave like a flandip', 'can behave like a flandip', 1, {
+        name: 'BazError',
+        message:
+          'expected baz to be masher, a hustler, an uninvited grasper of cone',
+        stack: 'BazFile line:1\nBazFile line:2'
+      }),
       {
         name: 'BazError',
         message:
-          'expected baz to be masher, a hustler, an uninvited grasper of cone'
+          'expected baz to be masher, a hustler, an uninvited grasper of cone',
+        stack: 'BazFile line:1\nBazFile line:2'
       }
     );
 
@@ -234,8 +243,8 @@ describe('mocha-xunit-reporter', () => {
       reporter = spyingReporter();
     });
 
-    it('skips suites with empty title', function() {
-      runner.startSuite({ title: '', tests: [1] });
+    it('skips suites with empty tests', function() {
+      runner.startSuite({ title: '', tests: [] });
       runner.end();
 
       expect(assembly).to.be.empty;
@@ -249,7 +258,7 @@ describe('mocha-xunit-reporter', () => {
     });
 
     it('does not skip suites with nested suites', function() {
-      runner.startSuite({ title: 'test me', suites: [1] });
+      runner.startSuite({ title: 'test me', suites: [1], tests: [1] });
       runner.end();
 
       expect(assembly).to.have.length(1);
@@ -263,18 +272,18 @@ describe('mocha-xunit-reporter', () => {
     });
 
     it('does not skip root suite', function() {
-      runner.startSuite({ title: '', root: true, suites: [1] });
+      runner.startSuite({ title: '', root: true, suites: [1], tests: [1] });
       runner.end();
 
       expect(assembly).to.have.length(1);
     });
 
     it('uses "Root Suite" by default', function() {
-      runner.startSuite({ title: '', root: true, suites: [1] });
+      runner.startSuite({ title: '', root: true, suites: [1], tests: [1] });
       runner.end();
       expect(assembly[0].collection[0]._attr).to.have.property(
         'name',
-        'Root Suite'
+        'Untitled Collection'
       );
     });
 
