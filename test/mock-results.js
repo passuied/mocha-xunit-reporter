@@ -51,6 +51,23 @@ module.exports = function(stats, options) {
                       time: '0.001',
                       result: 'failed'
                     }
+                  },
+                  {
+                    failure: [
+                      {
+                        _attr: {
+                          'exception-type': 'BarError'
+                        }
+                      },
+                      {
+                        message: 'expected garthog to be dead'
+                      },
+                      {
+                        'stack-trace': {
+                          _cdata: 'expected garthog to be dead'
+                        }
+                      }
+                    ]
                   }
                 ]
               },
@@ -62,6 +79,23 @@ module.exports = function(stats, options) {
                       time: '0.001',
                       result: 'failed'
                     }
+                  },
+                  {
+                    failure: [
+                      {
+                        _attr: {
+                          'exception-type': 'BazError'
+                        }
+                      },
+                      {
+                        message: 'expected baz to be masher, a hustler, an uninvited grasper of cone'
+                      },
+                      {
+                        'stack-trace': {
+                          _cdata: 'BazFile line:1\nBazFile line:2'
+                        }
+                      }
+                    ]
                   }
                 ]
               }
