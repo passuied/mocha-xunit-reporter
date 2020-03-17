@@ -53,6 +53,20 @@ Given a test with title 'test should behave like so @aid=EPM-DP-C1234 @sid=EPM-1
 <test name="test should behave like so" aid="EPM-DP-C1234" sid="EPM-1234" type="Integration" />
 ```
 
+## XUnit XML format
+The generated test results file conforms to [XUnit's XML format](https://xunit.net/docs/format-xml-v2).
+
+### `failure` element
+In case of an error or failure during a test run, a `failure` element will be included as a child element with its corresponding `test` element. This element will contain information about the failed test.
+
+```
+<failure exception-type="Error">
+  <message><![CDATA[This test threw an error]]></message>
+  <stack-trace><![CDATA[Error: testing123
+at Context.<anonymous> (example.spec.ts-1:1:1)]]></stack-trace>
+</failure>
+```
+
 ### Full configuration options
 
 | Parameter | Effect |
