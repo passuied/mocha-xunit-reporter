@@ -37,5 +37,8 @@
   "bugs": {
     "url": "https://github.com/passuied/mocha-xunit-reporter/issues"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "homepage": "https://github.com/passuied/mocha-xunit-reporter#readme"
 }
