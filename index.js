@@ -28,8 +28,8 @@ function configureDefaults(options) {
   return options;
 }
 
-function isInvalidSuite(suite) {
-  return (
+function isValidSuite(suite) {
+  return !(
     (!suite.root && suite.title === '') ||
     (suite.tests.length === 0 && suite.suites.length === 0)
   );
@@ -103,7 +103,7 @@ function MochaXUnitReporter(runner, options) {
   this._runner.on(
     'suite',
     function(suite) {
-      if (!isInvalidSuite(suite)) {
+      if (isValidSuite(suite)) {
         collections.push(this.getCollectionData(suite));
       }
     }.bind(this)
