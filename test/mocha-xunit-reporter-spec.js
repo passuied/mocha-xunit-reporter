@@ -283,7 +283,24 @@ describe('mocha-xunit-reporter', () => {
       runner.end();
       expect(assembly[0].collection[0]._attr).to.have.property(
         'name',
-        'Untitled Collection'
+        'Root Suite'
+      );
+    });
+
+    it('uses "Root Suite" even with no test when before hook fails', function() {
+      runner.startSuite({ title: '', root: true, suites: [1], tests: [] });
+      runner.fail({
+        fullTitle: () => 'before all hook',
+      }, 'failed');
+      runner.end();
+
+      expect(assembly[0].collection[0]._attr).to.have.property(
+        'name',
+        'Root Suite'
+      );
+      expect(assembly[0].collection[1].test[0]._attr).to.have.property(
+        'result',
+        'failed'
       );
     });
 

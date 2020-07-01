@@ -28,6 +28,13 @@ function configureDefaults(options) {
   return options;
 }
 
+function isValidSuite(suite) {
+  return !(
+    (!suite.root && suite.title === '') ||
+    (suite.tests.length === 0 && suite.suites.length === 0)
+  );
+}
+
 /**
  * Parses title for tags in format @tagName=value
  * @param {} testTitle
@@ -96,7 +103,7 @@ function MochaXUnitReporter(runner, options) {
   this._runner.on(
     'suite',
     function(suite) {
-      if (suite.tests.length) {
+      if (isValidSuite(suite)) {
         collections.push(this.getCollectionData(suite));
       }
     }.bind(this)
@@ -144,7 +151,7 @@ MochaXUnitReporter.prototype.getCollectionData = function(suite) {
     collection: [
       {
         _attr: {
-          name: suite.title || 'Untitled Collection',
+          name: suite.title || 'Root Suite',
           total: suite.tests.length
         }
       }
