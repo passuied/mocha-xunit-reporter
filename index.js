@@ -17,8 +17,41 @@ var INVALID_CHARACTERS = ['\u001b'];
 
 function configureDefaults(options) {
   debug(options);
-  options = options || {};
-  options = options.reporterOptions || {};
+
+  if (!options) {
+    options = {};
+  } else if (options.reporterOptions) {
+    options = options.reporterOptions;
+  } else {
+    /*
+     * Mocha parses mocharc files by flattening nested properties into
+     * top-level properties with period-delimited property names.
+     *
+     * Example .mocharc.json (abbreviated):
+     *
+     * {
+     *   "reporter": "mocha-xunit-reporter",
+     *   "reporterOptions": {
+     *     "mochaFile": "my-test-results.xml",
+     *   }
+     * }
+     *
+     * The resulting options object includes a property under the key
+     * `reporterOptions.mochaFile`, rather than including an object under key
+     * `reporterOptions`.
+     *
+     * To honor reporter options specified in these files, check for options
+     * prefixed with `reporterOptions.`.
+     */
+    options = Object.keys(options).reduce(function(reporterOptions, key) {
+      if (key.startsWith('reporterOptions.')) {
+        reporterOptions[key.substring('reporterOptions.'.length)] = options[key];
+      }
+
+      return reporterOptions;
+    }, {});
+  }
+
   options.mochaFile =
     options.mochaFile || process.env.MOCHA_FILE || 'test-results.xml';
   options.toConsole = !!options.toConsole;
