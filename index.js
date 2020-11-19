@@ -145,14 +145,14 @@ function MochaXUnitReporter(runner, options) {
   this._runner.on(
     'pass',
     function(test) {
-      lastCollection().push(this.getTestData(test, 'passed'));
+      lastCollection().push(this.getTestData(test, 'Pass'));
     }.bind(this)
   );
 
   this._runner.on(
     'fail',
     function(test, err) {
-      lastCollection().push(this.getTestData(test, 'failed'));
+      lastCollection().push(this.getTestData(test, 'Fail'));
     }.bind(this)
   );
 
@@ -160,7 +160,7 @@ function MochaXUnitReporter(runner, options) {
     this._runner.on(
       'pending',
       function(test) {
-        var test = this.getTestData(test, 'skipped');
+        var test = this.getTestData(test, 'Skip');
         lastCollection().push(test);
       }.bind(this)
     );
@@ -210,7 +210,6 @@ MochaXUnitReporter.prototype.getTestData = function(test, status) {
       name = stripAnsi(tagResult.cleanTitle);
     }
   }
-
   var testCase = {
     test: [
       {
@@ -245,7 +244,7 @@ MochaXUnitReporter.prototype.getTestData = function(test, status) {
     });
   }
 
-  if (status === 'failed') {
+  if (status === 'Fail') {
     testCase.test.push({
       failure: [
         {
@@ -319,13 +318,13 @@ MochaXUnitReporter.prototype.getXml = function(collections) {
     _collAttr.skipped = 0;
 
     _cases.forEach(function(test) {
-      if (test.test[0]._attr.result == 'skipped') {
+      if (test.test[0]._attr.result == 'Skip') {
         _collAttr.skipped++;
       }
-      if (test.test[0]._attr.result == 'failed') {
+      if (test.test[0]._attr.result == 'Fail') {
         _collAttr.failed++;
       }
-      if (test.test[0]._attr.result == 'passed') {
+      if (test.test[0]._attr.result == 'Pass') {
         _collAttr.passed++;
       }
       _collAttr.time += test.test[0]._attr.time;

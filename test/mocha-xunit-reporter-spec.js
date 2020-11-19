@@ -291,7 +291,7 @@ describe('mocha-xunit-reporter', () => {
       runner.startSuite({ title: '', root: true, suites: [1], tests: [] });
       runner.fail({
         fullTitle: () => 'before all hook',
-      }, 'failed');
+      }, 'Fail');
       runner.end();
 
       expect(assembly[0].collection[0]._attr).to.have.property(
@@ -300,7 +300,7 @@ describe('mocha-xunit-reporter', () => {
       );
       expect(assembly[0].collection[1].test[0]._attr).to.have.property(
         'result',
-        'failed'
+        'Fail'
       );
     });
 
