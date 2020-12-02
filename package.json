@@ -1,6 +1,6 @@
 {
   "name": "mocha-xunit-reporter",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A Mocha xunit reporter",
   "main": "index.js",
   "scripts": {
