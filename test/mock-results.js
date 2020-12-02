@@ -38,7 +38,7 @@ module.exports = function(stats, options) {
                     _attr: {
                       name: 'Foo can weez the juice',
                       time: '0.001',
-                      result: 'passed'
+                      result: 'Pass'
                     }
                   }
                 ]
@@ -49,7 +49,7 @@ module.exports = function(stats, options) {
                     _attr: {
                       name: 'Bar can narfle the garthog',
                       time: '0.001',
-                      result: 'failed'
+                      result: 'Fail'
                     }
                   },
                   {
@@ -77,7 +77,7 @@ module.exports = function(stats, options) {
                     _attr: {
                       name: 'Baz can behave like a flandip',
                       time: '0.001',
-                      result: 'failed'
+                      result: 'Fail'
                     }
                   },
                   {
@@ -119,7 +119,7 @@ module.exports = function(stats, options) {
                     _attr: {
                       name: 'Another suite',
                       time: '0.004',
-                      result: 'passed'
+                      result: 'Pass'
                     }
                   }
                 ]
@@ -150,7 +150,7 @@ module.exports = function(stats, options) {
               _attr: {
                 name: 'Pending suite',
                 time: '0',
-                result: 'skipped'
+                result: 'Skip'
               }
             }
           ]
