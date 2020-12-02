@@ -4,5 +4,4 @@ test/subdir/
 test/*.xml
 node-debug*
 npm-debug*
-package-lock.json
 .npmrc
